@@ -1,0 +1,37 @@
+---
+title: "p8105_hw5_co2554"
+author: "Camille Okonkwo"
+output: github_document
+---
+
+```{r setup, include = FALSE, message = FALSE, warning = FALSE}
+library(tidyverse)
+
+knitr::opts_chunk$set(
+  echo = TRUE, 
+  warning = FALSE,
+  fig.width = 6, 
+  fig.asp = .6, 
+  out.width = "90%"
+  )
+
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+```
+
+Load key packages.
+
+```{r cars}
+library(tidyverse)
+library(rvest)
+```
+
+Set seed for reproducibility.
+
+```{r}
+set.seed(12345)
+```
