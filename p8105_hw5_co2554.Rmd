@@ -7,6 +7,7 @@ output: github_document
 ```{r setup, include = FALSE, message = FALSE, warning = FALSE}
 library(tidyverse)
 library(purrr)
+library(ggplot2)
 knitr::opts_chunk$set(
   echo = TRUE, 
   warning = FALSE,
@@ -62,13 +63,16 @@ long_study_df =
   })
 ```
 
-Let's make a spaghetti plot.
-```{r spaghetti}
-long_study_df |> 
+
+
+```{r}
+long_study_df |>
   ggplot(aes(x = week, y = observation, color = arm, group = subject_id)) +
   geom_line() +
-  labs(title = "Spaghetti Plot of Observations Over Time",
+  geom_point() +
+  labs(title = "Observations Over Time",
        x = "Week",
        y = "Observation")
+
 ```
 
