@@ -6,7 +6,7 @@ output: github_document
 
 ```{r setup, include = FALSE, message = FALSE, warning = FALSE}
 library(tidyverse)
-
+library(purrr)
 knitr::opts_chunk$set(
   echo = TRUE, 
   warning = FALSE,
@@ -28,6 +28,7 @@ Load key packages.
 ```{r cars}
 library(tidyverse)
 library(rvest)
+library(purrr)
 ```
 
 Set seed for reproducibility.
@@ -35,3 +36,40 @@ Set seed for reproducibility.
 ```{r}
 set.seed(12345)
 ```
+
+### Problem 2
+
+Let's import and tidy the data.
+
+```{r}
+long_study_files = list.files(path = ".", pattern = "\\.csv$", full.names = TRUE)
+
+long_study_df =
+  long_study_files |> 
+  map_df(~{
+    read.csv(.x)  |> 
+      janitor::clean_names()  |> 
+      mutate(
+        subject_id = as.numeric(str_extract(.x, "\\d+")),
+        arm = ifelse(grepl("con", .x), "Control", "Experimental")
+      )  |> 
+      pivot_longer(
+        cols = starts_with("week_"),
+        names_to = "week", 
+        values_to = "observation"
+      )  |> 
+      select(subject_id, arm, everything())
+  })
+```
+
+Let's make a spagett
+```{r}
+long_study_df |> 
+  ggplot(aes(x = week, y = observation, color = arm, group = subject_id)) +
+  geom_line() +
+  geom_point() +
+  labs(title = "Spaghetti Plot of Observations Over Time",
+       x = "Week",
+       y = "Observation")
+```
+
