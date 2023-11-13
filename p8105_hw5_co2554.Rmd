@@ -7,7 +7,6 @@ output: github_document
 ```{r setup, include = FALSE, message = FALSE, warning = FALSE}
 library(tidyverse)
 library(purrr)
-library(ggplot2)
 knitr::opts_chunk$set(
   echo = TRUE, 
   warning = FALSE,
@@ -28,8 +27,6 @@ Load key packages.
 
 ```{r cars}
 library(tidyverse)
-library(rvest)
-library(purrr)
 ```
 
 Set seed for reproducibility.
@@ -43,7 +40,7 @@ set.seed(12345)
 Let's import and tidy the data.
 
 ```{r import_tidy}
-long_study_files = list.files(path = ".", pattern = "\\.csv$", full.names = TRUE)
+long_study_files = list.files(path = "data/", pattern = ".csv", full.names = TRUE)
 
 long_study_df =
   long_study_files |> 
@@ -63,16 +60,18 @@ long_study_df =
   })
 ```
 
-
-
-```{r}
+```{r spaghetti_plot}
 long_study_df |>
   ggplot(aes(x = week, y = observation, color = arm, group = subject_id)) +
   geom_line() +
   geom_point() +
-  labs(title = "Observations Over Time",
-       x = "Week",
-       y = "Observation")
+  labs(title = "Observations Over Time") +
+  facet_wrap(~arm) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ```
 
+
+### Problem 3
+
+Let's set up the design elements: 
