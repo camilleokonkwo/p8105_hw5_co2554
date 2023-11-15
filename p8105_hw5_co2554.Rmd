@@ -60,7 +60,6 @@ long_study_df =
   })
 ```
 
-
 Make a spaghetti plot showing observations on each subject over time.
 
 ```{r spaghetti_plot}
@@ -72,7 +71,6 @@ long_study_df |>
   facet_wrap(~arm) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
-
 
 The plot shows us that the expiremental group has experienced a more significant increase in the observation values compared to the control group. The control group values were mostly consistent during the 8 week period.
 
@@ -96,7 +94,7 @@ sim_power = function(mu) {
 
 sim_power_results = expand_grid(
   mu_df = c(0, 1, 2, 3, 4, 5, 6), 
-  iteration = 1:500
+  iteration = 1:5000
 ) |> 
   mutate(
     estimate = map(mu_df, sim_power)
@@ -114,7 +112,7 @@ sim_power_results |>
   group_by(mu_df) |> 
   summarize(
     reject = sum(p_val < 0.05), 
-    proportion = reject / 500
+    proportion = reject / 5000
   ) |> 
   ggplot(aes(x = mu_df, y = proportion)) +
   geom_line(alpha = 0.6, linewidth = 0.9) +
@@ -125,7 +123,7 @@ sim_power_results |>
 It appears that as the effect size increases, power also increases. This is due to the overlapping between the average of the alternative distribution with the null distribution, which increases our likelihood of rejecting the null. 
 
 
-To conclude, I'm going to make a plot that shows the average estimate of  μ̂ on the y axis and the true value of μ on the x axis. To do this, I'll first separate the true values of μ̂ from the rejected values of μ̂. 
+To conclude, I'm going to make a plot that shows the average estimate of μ̂ on the y axis and the true value of μ on the x axis. To do this, I'll first separate the true values of μ̂ from the rejected values of μ̂. 
  
 ```{r mu_true}
 true_mu =
@@ -142,19 +140,16 @@ reject_mu =
   summarize(mean_mu = mean(mu_hat))
 ```
 
+Now, we plot.
+
+```{r mu_plot}
+ggplot(true_mu, aes(x = mu_df, y = mean_mu)) +
+  geom_line() +
+  geom_line(data = reject_mu, color = "red") +
+  labs(title = "Comapring the True μ to Rejected μ")
+```
 
 
+The red rejected μ line illustrates the relationship between true μ values and average μ_hat value of those who were rejected, p_value less than 0.05, and the black line illustrates the relationship for all samples within the data set. 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+We can see the average μ_hat value of the samples where the null was rejected are different from the true mu value from 0 to 3. The rejected μ values line begins to mimic true μ values at roughly 4.
